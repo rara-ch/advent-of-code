@@ -3,6 +3,7 @@ const fs = require('node:fs');
 function main() {
     const input = processInput(fs.readFileSync('day_seven_input.txt', 'utf-8').split('\n'));
     console.log(partOne(input));
+    console.log(partTwo(input));
 }
 
 function processInput(input) {
@@ -69,6 +70,21 @@ function partOne(bags) {
         checkBag(bag);
     }
     return contains.size;
+}
+
+function partTwo(bags) {
+    function amountBagContains(colour) {
+        const innerBags = bags[colour];
+        if (innerBags === null) {
+            return 0;
+        }
+
+        return innerBags
+            .map((innerBag) => amountBagContains(innerBag.colour) * innerBag.amount + innerBag.amount)
+            .reduce((accumulator, currentVal) => accumulator + currentVal, 0);
+    }
+
+    return amountBagContains('shiny gold', 1);
 }
 
 main();
